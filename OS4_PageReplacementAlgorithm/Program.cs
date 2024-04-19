@@ -135,17 +135,59 @@ namespace OS4_PageReplacementAlgorithm
 
         static void Main(string[] args)
         {
-            List<int> referenceString = new List<int> { 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 };
-            int frameCount = 4;
-            
+            //List<int> referenceString = new List<int> { 1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5 };
+            //int frameCount = 4;
+
+            Console.WriteLine("Enter the reference string, separated by commas (e.g., 1,2,3,4,1,2,5,1,2,3,4,5):");
+            string input = Console.ReadLine();
+            List<int> referenceString = new List<int>();
+
+            try
+            {
+                referenceString = input.Split(',').Select(int.Parse).ToList();
+            }
+            catch
+            {
+                Console.WriteLine("Unable to parse reference string! Exiting...");
+                Environment.Exit(1);
+            }
+
+            foreach(int page in referenceString)
+            {
+                if(page < 1)
+                {
+                    Console.WriteLine("All pages must be greater than zero! Exiting...");
+                    Environment.Exit(1);
+                }
+            }
+
+            Console.WriteLine("Enter the number of frames:");
+            int frameCount = 0;
+            try
+            {
+                frameCount = int.Parse(Console.ReadLine());
+            }
+            catch
+            {
+                Console.WriteLine("Unable to parse frame count! Exiting...");
+                Environment.Exit(1);
+            }
+            if(frameCount < 1)
+            {
+                Console.WriteLine("Page count must be at least 1! Exiting...");
+                Environment.Exit(1);
+            }
+
+            Console.WriteLine();
+
             // See the README for my efficiency assessment of each algorithm.
-            Console.WriteLine("Running LRU Algorithm:");
+            Console.WriteLine("Running LRU Algorithm:\n--------------------------");
             SimulatePageReplacement(referenceString, frameCount, new LRUPageReplacement());
 
-            Console.WriteLine("\n\nRunning Optimal Algorithm:");
+            Console.WriteLine("\n\nRunning Optimal Algorithm:\n--------------------------");
             SimulatePageReplacement(referenceString,frameCount,new OptimalPageReplacement(referenceString));
 
-            Console.WriteLine("\n\nRunning FIFO Algorithm:");
+            Console.WriteLine("\n\nRunning FIFO Algorithm:\n--------------------------");
             SimulatePageReplacement(referenceString,frameCount,new FIFOPageReplacement());
         }
     }
